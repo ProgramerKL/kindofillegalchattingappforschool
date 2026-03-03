@@ -1,0 +1,5 @@
+node_modules/
+.mcp.json
+CODEBASE_AUDIT.md
+PERFORMANCE_ANALYSIS.md
+.vercel
