@@ -3,447 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess App</title>
+    <title>Google News</title>
     <link rel="stylesheet" href="styles.css">
-    <script>
-    window.addEventListener('error', function(e) {
-        var d = document.createElement('div');
-        d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:10px;z-index:9999;font-size:14px';
-        d.textContent = 'JS Error: ' + (e.message || e.error || 'Module failed to load') + ' ' + (e.filename || '') + ':' + (e.lineno || '');
-        document.body.appendChild(d);
-    }, true);
-    window.addEventListener('unhandledrejection', function(e) {
-        var d = document.createElement('div');
-        d.style.cssText = 'position:fixed;top:0;left:0;right:0;background:orange;color:white;padding:10px;z-index:9999;font-size:14px';
-        d.textContent = 'Promise Error: ' + (e.reason ? e.reason.message || e.reason : 'unknown');
-        document.body.appendChild(d);
-    });
-    </script>
 </head>
 <body>
-    <!-- User Account Bar -->
-    <div class="account-bar">
-        <div class="account-info" id="account-info">
-            <button id="login-btn" class="account-btn">Login / Sign Up</button>
-        </div>
-        <button id="leaderboard-btn" class="leaderboard-btn">🏆 Leaderboard</button>
-    </div>
-
-    <!-- Login/Signup Modal -->
-    <div id="auth-modal" class="modal hidden">
-        <div class="modal-content auth-modal-content">
-            <button class="modal-close" id="auth-close">&times;</button>
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">Login</button>
-                <button class="auth-tab" data-tab="signup">Sign Up</button>
+    <!-- NEWS VIEW (visible by default) -->
+    <div id="news-view">
+        <header class="news-header">
+            <div class="news-logo">
+                <span class="logo-g">G</span><span class="logo-o1">o</span><span class="logo-o2">o</span><span class="logo-g2">g</span><span class="logo-l">l</span><span class="logo-e">e</span>
+                <span class="logo-news">News</span>
             </div>
-            <form id="login-form" class="auth-form">
-                <div class="form-group">
-                    <label for="login-email">Email</label>
-                    <input type="email" id="login-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="login-password">Password</label>
-                    <input type="password" id="login-password" required minlength="6">
-                </div>
-                <button type="submit" class="auth-submit">Login</button>
-                <div class="auth-error" id="login-error"></div>
-            </form>
-            <form id="signup-form" class="auth-form hidden">
-                <div class="form-group">
-                    <label for="signup-username">Username</label>
-                    <input type="text" id="signup-username" required minlength="3" maxlength="20">
-                </div>
-                <div class="form-group">
-                    <label for="signup-email">Email</label>
-                    <input type="email" id="signup-email" required>
-                </div>
-                <div class="form-group">
-                    <label for="signup-password">Password</label>
-                    <input type="password" id="signup-password" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label for="signup-confirm">Confirm Password</label>
-                    <input type="password" id="signup-confirm" required minlength="4">
-                </div>
-                <button type="submit" class="auth-submit">Create Account</button>
-                <div class="auth-error" id="signup-error"></div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Leaderboard Modal -->
-    <div id="leaderboard-modal" class="modal hidden">
-        <div class="modal-content leaderboard-modal-content">
-            <button class="modal-close" id="leaderboard-close">&times;</button>
-            <h2>🏆 Leaderboard</h2>
-            <p class="leaderboard-subtitle">Ranked by highest ELO bot beaten</p>
-            <div class="leaderboard-filter">
-                <label>Filter by opponent:</label>
-                <select id="leaderboard-filter">
-                    <option value="all">All Opponents</option>
-                </select>
-            </div>
-            <div class="leaderboard-list" id="leaderboard-list">
-                <div class="leaderboard-empty">No records yet. Beat an AI to get on the board!</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Lobby Modal -->
-    <div id="lobby-modal" class="modal hidden">
-        <div class="modal-content lobby-modal-content">
-            <button class="modal-close" id="lobby-close">&times;</button>
-            <h2>Online Multiplayer</h2>
-            <div class="lobby-tabs">
-                <button class="lobby-tab active" data-tab="create">Create Lobby</button>
-                <button class="lobby-tab" data-tab="join">Join Lobby</button>
-            </div>
-            <div id="lobby-create" class="lobby-panel">
-                <p class="lobby-desc">Create a lobby and share the code with your opponent.</p>
-                <button id="lobby-create-btn" class="lobby-action-btn">Create Lobby</button>
-                <div id="lobby-code-display" class="lobby-code-display hidden">
-                    <p>Share this code:</p>
-                    <div class="lobby-code" id="lobby-code-text"></div>
-                    <button id="lobby-copy-btn" class="lobby-copy-btn">Copy Code</button>
-                    <p class="lobby-waiting" id="lobby-waiting">Waiting for opponent to join...</p>
-                </div>
-            </div>
-            <div id="lobby-join" class="lobby-panel hidden">
-                <p class="lobby-desc">Enter the 6-character lobby code to join a game.</p>
-                <div class="lobby-join-row">
-                    <input type="text" id="lobby-code-input" maxlength="6" placeholder="Enter code" class="lobby-input" />
-                    <button id="lobby-join-btn" class="lobby-action-btn">Join</button>
-                </div>
-                <div class="lobby-error" id="lobby-error"></div>
-                <p class="lobby-waiting hidden" id="lobby-joining">Connecting to lobby...</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="game-container">
-        <h1>Chess App</h1>
-
-        <div class="game-options">
-            <div class="option-group">
-                <label>Game Mode:</label>
-                <select id="game-mode">
-                    <option value="computer">vs Computer</option>
-                    <option value="human">vs Human</option>
-                    <option value="online">Online Multiplayer</option>
-                </select>
-            </div>
-            <div class="option-group" id="color-group">
-                <label>Play as:</label>
-                <select id="player-color">
-                    <option value="white">White</option>
-                    <option value="black">Black</option>
-                </select>
-            </div>
-            <div class="option-group">
-                <label>Piece Style:</label>
-                <select id="piece-style">
-                    <option value="cburnett">Cburnett (Classic)</option>
-                    <option value="alpha">Alpha</option>
-                    <option value="california">California</option>
-                    <option value="cardinal">Cardinal</option>
-                    <option value="chessnut">Chessnut</option>
-                    <option value="companion">Companion</option>
-                    <option value="dubrovny">Dubrovny</option>
-                    <option value="fantasy">Fantasy</option>
-                    <option value="fresca">Fresca</option>
-                    <option value="gioco">Gioco</option>
-                    <option value="governor">Governor</option>
-                    <option value="horsey">Horsey</option>
-                    <option value="icpieces">ICPieces</option>
-                    <option value="kosal">Kosal</option>
-                    <option value="leipzig">Leipzig</option>
-                    <option value="maestro">Maestro</option>
-                    <option value="merida">Merida</option>
-                    <option value="pirouetti">Pirouetti</option>
-                    <option value="pixel" selected>Pixel</option>
-                    <option value="riohacha">Riohacha</option>
-                    <option value="spatial">Spatial</option>
-                    <option value="staunty">Staunty</option>
-                    <option value="tatiana">Tatiana</option>
-                </select>
-            </div>
-            <div class="option-group">
-                <label>Time Control:</label>
-                <select id="time-control">
-                    <option value="bullet">Bullet (1 min)</option>
-                    <option value="blitz">Blitz (3+2)</option>
-                    <option value="rapid" selected>Rapid (10+5)</option>
-                    <option value="classical">Classical (30+10)</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="opponent-select" class="opponent-select">
-            <h2>Choose Your Opponent</h2>
-            <div class="opponents-grid">
-                <div class="opponent-card random-card" data-opponent="random">
-                    <div class="opponent-avatar">🎲</div>
-                    <div class="opponent-name">Random</div>
-                    <div class="opponent-title">Mystery</div>
-                    <div class="opponent-elo">??? ELO</div>
-                    <div class="opponent-desc">Let fate choose your opponent!</div>
-                </div>
-                <div class="opponent-card" data-opponent="baby">
-                    <div class="opponent-avatar">👶</div>
-                    <div class="opponent-name">Baby Ben</div>
-                    <div class="opponent-title">First Timer</div>
-                    <div class="opponent-elo">100 ELO</div>
-                    <div class="opponent-desc">Literally just learned how pieces move</div>
-                </div>
-                <div class="opponent-card" data-opponent="timmy">
-                    <div class="opponent-avatar">🧒</div>
-                    <div class="opponent-name">Timmy</div>
-                    <div class="opponent-title">Beginner</div>
-                    <div class="opponent-elo">200 ELO</div>
-                    <div class="opponent-desc">Just learned the rules yesterday!</div>
-                </div>
-                <div class="opponent-card" data-opponent="grandma">
-                    <div class="opponent-avatar">👵</div>
-                    <div class="opponent-name">Grandma Rose</div>
-                    <div class="opponent-title">Casual</div>
-                    <div class="opponent-elo">300 ELO</div>
-                    <div class="opponent-desc">Plays once a year at family gatherings</div>
-                </div>
-                <div class="opponent-card" data-opponent="sarah">
-                    <div class="opponent-avatar">👧</div>
-                    <div class="opponent-name">Sarah</div>
-                    <div class="opponent-title">Casual Player</div>
-                    <div class="opponent-elo">400 ELO</div>
-                    <div class="opponent-desc">Plays chess with family on weekends</div>
-                </div>
-                <div class="opponent-card" data-opponent="mike">
-                    <div class="opponent-avatar">👦</div>
-                    <div class="opponent-name">Mike</div>
-                    <div class="opponent-title">Novice</div>
-                    <div class="opponent-elo">500 ELO</div>
-                    <div class="opponent-desc">Watches chess on YouTube sometimes</div>
-                </div>
-                <div class="opponent-card" data-opponent="bob">
-                    <div class="opponent-avatar">👨</div>
-                    <div class="opponent-name">Bob</div>
-                    <div class="opponent-title">Hobbyist</div>
-                    <div class="opponent-elo">600 ELO</div>
-                    <div class="opponent-desc">Coffee shop regular, knows some openings</div>
-                </div>
-                <div class="opponent-card" data-opponent="lisa">
-                    <div class="opponent-avatar">👩‍💼</div>
-                    <div class="opponent-name">Lisa</div>
-                    <div class="opponent-title">Patzer</div>
-                    <div class="opponent-elo">750 ELO</div>
-                    <div class="opponent-desc">Office chess club member, improving fast</div>
-                </div>
-                <div class="opponent-card" data-opponent="elena">
-                    <div class="opponent-avatar">👩</div>
-                    <div class="opponent-name">Elena</div>
-                    <div class="opponent-title">Club Player</div>
-                    <div class="opponent-elo">900 ELO</div>
-                    <div class="opponent-desc">Plays at the local chess club</div>
-                </div>
-                <div class="opponent-card" data-opponent="raj">
-                    <div class="opponent-avatar">👨‍💻</div>
-                    <div class="opponent-name">Raj</div>
-                    <div class="opponent-title">Rising Star</div>
-                    <div class="opponent-elo">1050 ELO</div>
-                    <div class="opponent-desc">Online chess addict, 1000+ games played</div>
-                </div>
-                <div class="opponent-card" data-opponent="marcus">
-                    <div class="opponent-avatar">🧔</div>
-                    <div class="opponent-name">Marcus</div>
-                    <div class="opponent-title">Intermediate</div>
-                    <div class="opponent-elo">1200 ELO</div>
-                    <div class="opponent-desc">Studies tactics daily, solid fundamentals</div>
-                </div>
-                <div class="opponent-card" data-opponent="anna">
-                    <div class="opponent-avatar">👩‍🎓</div>
-                    <div class="opponent-name">Anna</div>
-                    <div class="opponent-title">Skilled</div>
-                    <div class="opponent-elo">1300 ELO</div>
-                    <div class="opponent-desc">University chess team captain</div>
-                </div>
-                <div class="opponent-card" data-opponent="victoria">
-                    <div class="opponent-avatar">👩‍🦰</div>
-                    <div class="opponent-name">Victoria</div>
-                    <div class="opponent-title">Advanced</div>
-                    <div class="opponent-elo">1400 ELO</div>
-                    <div class="opponent-desc">Tournament player with years of experience</div>
-                </div>
-                <div class="opponent-card" data-opponent="igor">
-                    <div class="opponent-avatar">🧓</div>
-                    <div class="opponent-name">Igor</div>
-                    <div class="opponent-title">Veteran</div>
-                    <div class="opponent-elo">1500 ELO</div>
-                    <div class="opponent-desc">Old-school tactician from the Soviet era</div>
-                </div>
-                <div class="opponent-card" data-opponent="chen">
-                    <div class="opponent-avatar">👨‍🏫</div>
-                    <div class="opponent-name">Dr. Chen</div>
-                    <div class="opponent-title">Expert</div>
-                    <div class="opponent-elo">1600 ELO</div>
-                    <div class="opponent-desc">Chess coach and FIDE rated player</div>
-                </div>
-                <div class="opponent-card" data-opponent="natasha">
-                    <div class="opponent-avatar">👸</div>
-                    <div class="opponent-name">Natasha</div>
-                    <div class="opponent-title">Master</div>
-                    <div class="opponent-elo">1700 ELO</div>
-                    <div class="opponent-desc">National champion, fears no one</div>
-                </div>
-                <div class="opponent-card" data-opponent="magnus">
-                    <div class="opponent-avatar">🏆</div>
-                    <div class="opponent-name">Grandmaster X</div>
-                    <div class="opponent-title">Grandmaster</div>
-                    <div class="opponent-elo">1800 ELO</div>
-                    <div class="opponent-desc">Will crush you without mercy</div>
-                </div>
-                <div class="opponent-card" data-opponent="stockfish">
-                    <div class="opponent-avatar">🐟</div>
-                    <div class="opponent-name">Stockfish Jr</div>
-                    <div class="opponent-title">Super GM</div>
-                    <div class="opponent-elo">2000 ELO</div>
-                    <div class="opponent-desc">Engine at near-full strength</div>
-                </div>
-                <div class="opponent-card" data-opponent="deepblue">
-                    <div class="opponent-avatar">🤖</div>
-                    <div class="opponent-name">Deep Blue</div>
-                    <div class="opponent-title">Maximum</div>
-                    <div class="opponent-elo">2200 ELO</div>
-                    <div class="opponent-desc">Full engine power. Good luck.</div>
-                </div>
-                <div class="opponent-card custom-card" data-opponent="custom">
-                    <div class="opponent-avatar">🎯</div>
-                    <div class="opponent-name">Custom Bot</div>
-                    <div class="opponent-title">You Decide</div>
-                    <div class="opponent-elo">??? ELO</div>
-                    <div class="opponent-desc">Set any ELO you want!</div>
-                </div>
-            </div>
-            <div class="custom-elo-section hidden" id="custom-elo-section">
-                <label for="custom-elo-input">Enter your desired ELO (50-3000):</label>
-                <div class="custom-elo-row">
-                    <input type="number" id="custom-elo-input" min="50" max="3000" placeholder="e.g. 850" />
-                    <button id="custom-elo-btn">Set ELO</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="game-info">
-            <div id="opponent-display" class="opponent-display hidden"></div>
-            <div id="turn-indicator">White's Turn</div>
-            <div id="game-status"></div>
-            <div id="engine-status"></div>
-        </div>
-
-        <div class="game-area">
-            <div id="coach-panel" class="coach-panel">
-                <div class="coach-header">
-                    <span class="coach-icon">🎯</span>
-                    <span class="coach-title">AI Coach</span>
-                </div>
-                <div class="coach-messages" id="coach-messages"></div>
-            </div>
-
-            <div class="table-surface">
-                <div class="player-nameplates" id="player-nameplates">
-                    <div class="nameplate opponent" id="nameplate-opponent">
-                        <div class="nameplate-info">
-                            <div class="nameplate-avatar" id="opponent-nameplate-avatar">🤖</div>
-                            <div class="nameplate-details">
-                                <span class="nameplate-name" id="opponent-nameplate-name">Opponent</span>
-                                <span class="nameplate-elo" id="opponent-nameplate-elo">1200 ELO</span>
-                            </div>
-                        </div>
-                        <div class="captured-tray" id="opponent-captured-tray">
-                            <div class="captured-tray-pieces" id="opponent-tray-pieces"></div>
-                        </div>
-                        <div class="chess-clock" id="opponent-clock">
-                            <span class="chess-clock-icon">⏱</span>
-                            <span id="opponent-time">10:00</span>
-                        </div>
-                        <div class="thinking-indicator">
-                            <div class="thinking-dot"></div>
-                            <div class="thinking-dot"></div>
-                            <div class="thinking-dot"></div>
-                        </div>
-                        <div class="turn-indicator-light"></div>
-                    </div>
-                </div>
-
-                <div class="board-container">
-                    <div class="board-wrapper">
-                        <div class="rank-labels" id="rank-labels"></div>
-                        <div id="board"></div>
-                    </div>
-                    <div class="file-labels" id="file-labels"></div>
-                </div>
-
-                <div class="player-nameplates" id="player-nameplates-bottom">
-                    <div class="nameplate player active" id="nameplate-player">
-                        <div class="turn-indicator-light"></div>
-                        <div class="chess-clock" id="player-clock">
-                            <span class="chess-clock-icon">⏱</span>
-                            <span id="player-time">10:00</span>
-                        </div>
-                        <div class="captured-tray" id="player-captured-tray">
-                            <div class="captured-tray-pieces" id="player-tray-pieces"></div>
-                        </div>
-                        <div class="nameplate-info">
-                            <div class="nameplate-avatar">👤</div>
-                            <div class="nameplate-details">
-                                <span class="nameplate-name">You</span>
-                                <span class="nameplate-elo">Player</span>
-                            </div>
-                        </div>
+            <div class="region-selector">
+                <label for="region-dropdown">Region:</label>
+                <div class="dropdown-wrapper">
+                    <input type="text" id="region-dropdown" placeholder="Select region..." autocomplete="off">
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <div class="dropdown-item">United States</div>
+                        <div class="dropdown-item">United Kingdom</div>
+                        <div class="dropdown-item">Canada</div>
+                        <div class="dropdown-item">Australia</div>
+                        <div class="dropdown-item">India</div>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <div id="chat-panel" class="chat-panel">
-                <div class="chat-header">
-                    <span class="chat-opponent-avatar"></span>
-                    <span class="chat-opponent-name">Opponent</span>
+        <main class="news-content">
+            <img src="news-screenshot.png" alt="News articles" class="news-screenshot">
+        </main>
+    </div>
+
+    <!-- CHAT VIEW (hidden by default) -->
+    <div id="chat-view" class="hidden">
+        <div class="chat-app">
+            <div class="chat-sidebar">
+                <div class="chat-sidebar-header">
+                    <h2>Secret Chat</h2>
+                    <span id="presence-count">0 online</span>
+                </div>
+                <div class="chat-list" id="chat-list"></div>
+                <button id="new-chat-btn" class="new-chat-btn">+ New Room</button>
+                <button id="back-to-news" class="back-to-news-btn">Back to News</button>
+            </div>
+            <div class="chat-main">
+                <div class="chat-main-header">
+                    <span class="chat-main-avatar">💬</span>
+                    <span id="chat-main-name">General</span>
                 </div>
                 <div class="chat-messages" id="chat-messages"></div>
+                <div class="chat-input-bar">
+                    <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                    <button id="send-btn">Send</button>
+                </div>
             </div>
-        </div>
-
-        <div id="promotion-modal" class="modal hidden">
-            <div class="modal-content">
-                <h2>Promote Pawn</h2>
-                <div class="promotion-choices"></div>
-            </div>
-        </div>
-
-        <div class="controls">
-            <button id="new-game">New Game</button>
-            <button id="resign-btn" class="resign-btn">Resign</button>
-            <button id="draw-btn" class="draw-btn">Offer Draw</button>
-        </div>
-
-        <div class="captured-pieces">
-            <div class="captured white-captured">
-                <span>Captured by White:</span>
-                <div id="white-captured"></div>
-            </div>
-            <div class="captured black-captured">
-                <span>Captured by Black:</span>
-                <div id="black-captured"></div>
-            </div>
-        </div>
-
-        <div class="move-history-panel">
-            <div class="move-history-header">
-                <span class="history-icon">📜</span>
-                <span class="history-title">Move History</span>
-            </div>
-            <div class="move-history-content" id="move-history"></div>
         </div>
     </div>
-    <script type="module" src="chess.js"></script>
+
+    <script type="module" src="chat.js"></script>
 </body>
 </html>

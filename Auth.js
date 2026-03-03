@@ -84,65 +84,6 @@ export async function getSession() {
   return session;
 }
 
-// Leaderboard functions
-export async function fetchLeaderboard(opponent) {
-  let query = supabase
-    .from("leaderboard")
-    .select("*")
-    .order("time_seconds", { ascending: true });
-
-  if (opponent && opponent !== "all") {
-    query = query.eq("opponent", opponent);
-  }
-
-  const { data, error } = await query;
-  if (error) {
-    console.error("Fetch leaderboard error:", error.message);
-    return [];
-  }
-  return data;
-}
-
-export async function upsertLeaderboardRecord(userId, username, opponent, timeSeconds) {
-  // Check if user already has a record for this opponent
-  const { data: existing } = await supabase
-    .from("leaderboard")
-    .select("id, time_seconds")
-    .eq("user_id", userId)
-    .eq("opponent", opponent)
-    .single();
-
-  if (existing) {
-    // Only update if new time is faster
-    if (timeSeconds < existing.time_seconds) {
-      const { error } = await supabase
-        .from("leaderboard")
-        .update({ time_seconds: timeSeconds, username: username })
-        .eq("id", existing.id);
-      if (error) {
-        console.error("Update leaderboard error:", error.message);
-        return { success: false, error: error.message };
-      }
-      return { success: true, updated: true };
-    }
-    return { success: true, updated: false };
-  }
-
-  // Insert new record
-  const { error } = await supabase.from("leaderboard").insert({
-    user_id: userId,
-    username: username,
-    opponent: opponent,
-    time_seconds: timeSeconds,
-  });
-
-  if (error) {
-    console.error("Insert leaderboard error:", error.message);
-    return { success: false, error: error.message };
-  }
-  return { success: true, updated: true };
-}
-
 // Auth state change listener - returns unsubscribe function
 export const { data: { subscription: authSubscription } } =
   supabase.auth.onAuthStateChange((event, session) => {
