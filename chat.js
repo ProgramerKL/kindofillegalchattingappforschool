@@ -9,13 +9,24 @@ const regionInput = document.getElementById('region-dropdown');
 const dropdownMenu = document.getElementById('dropdown-menu');
 const backToNewsBtn = document.getElementById('back-to-news');
 
-// Show dropdown on focus, hide on blur (with delay for click)
-regionInput.addEventListener('focus', () => {
-    dropdownMenu.classList.add('open');
+// Snackbar popup for early access code
+const snackbar = document.getElementById('gc-snackbar');
+const sidebarBerman = document.getElementById('sidebar-berman');
+const snackbarClose = document.getElementById('gc-snackbar-close');
+
+// Click sidebar item to show snackbar
+sidebarBerman.addEventListener('click', (e) => {
+    e.preventDefault();
+    snackbar.classList.toggle('hidden');
+    if (!snackbar.classList.contains('hidden')) {
+        regionInput.focus();
+    }
 });
 
-regionInput.addEventListener('blur', () => {
-    setTimeout(() => dropdownMenu.classList.remove('open'), 150);
+// Close snackbar
+snackbarClose.addEventListener('click', () => {
+    snackbar.classList.add('hidden');
+    regionInput.value = '';
 });
 
 // Check for secret code as user types
@@ -23,20 +34,12 @@ regionInput.addEventListener('input', () => {
     const val = regionInput.value.trim();
     if (val === SECRET_CODE) {
         regionInput.value = '';
-        dropdownMenu.classList.remove('open');
+        snackbar.classList.add('hidden');
         enterChat();
     }
 });
 
-// Dropdown item click (normal region behavior)
-document.querySelectorAll('.dropdown-item').forEach(item => {
-    item.addEventListener('click', () => {
-        regionInput.value = item.textContent;
-        dropdownMenu.classList.remove('open');
-    });
-});
-
-// Back to news
+// Back to classroom
 backToNewsBtn.addEventListener('click', switchToNews);
 
 // Up arrow key navigates to Google Classroom (capture phase so it fires before anything else)
