@@ -3,34 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google News</title>
+    <title>Google Classroom</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
-    <!-- NEWS VIEW (visible by default) -->
+    <!-- CLASSROOM VIEW (visible by default) -->
     <div id="news-view">
-        <header class="news-header">
-            <div class="news-logo">
-                <span class="logo-g">G</span><span class="logo-o1">o</span><span class="logo-o2">o</span><span class="logo-g2">g</span><span class="logo-l">l</span><span class="logo-e">e</span>
-                <span class="logo-news">News</span>
+        <header class="gc-header">
+            <div class="gc-header-left">
+                <button class="gc-icon-btn" aria-label="Menu">
+                    <span class="material-icons">menu</span>
+                </button>
+                <div class="gc-logo">
+                    <svg class="gc-logo-icon" viewBox="0 0 24 24" width="32" height="32">
+                        <path fill="#1a73e8" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3z"/>
+                        <circle fill="#fff" cx="12" cy="10" r="2.5"/>
+                        <path fill="#fff" d="M12 13c-2.33 0-7 1.17-7 3.5V18h14v-1.5c0-2.33-4.67-3.5-7-3.5z" opacity="0.7"/>
+                    </svg>
+                    <span class="gc-logo-text">Google Classroom</span>
+                </div>
             </div>
-            <div class="region-selector">
-                <label for="region-dropdown">Region:</label>
-                <div class="dropdown-wrapper">
-                    <input type="text" id="region-dropdown" placeholder="Select region..." autocomplete="off">
+            <div class="gc-header-center">
+                <div class="gc-search-wrapper">
+                    <span class="material-icons gc-search-icon">search</span>
+                    <input type="text" id="region-dropdown" class="gc-search-input" placeholder="Search your classes" autocomplete="off">
                     <div class="dropdown-menu" id="dropdown-menu">
-                        <div class="dropdown-item">United States</div>
-                        <div class="dropdown-item">United Kingdom</div>
-                        <div class="dropdown-item">Canada</div>
-                        <div class="dropdown-item">Australia</div>
-                        <div class="dropdown-item">India</div>
+                        <div class="dropdown-item">AP US History</div>
+                        <div class="dropdown-item">English Literature</div>
+                        <div class="dropdown-item">Calculus BC</div>
+                        <div class="dropdown-item">Biology Honors</div>
+                        <div class="dropdown-item">Computer Science</div>
                     </div>
                 </div>
             </div>
+            <div class="gc-header-right">
+                <button class="gc-icon-btn" aria-label="Create or join">
+                    <span class="material-icons">add</span>
+                </button>
+                <button class="gc-icon-btn" aria-label="Apps">
+                    <span class="material-icons">apps</span>
+                </button>
+                <div class="gc-avatar">K</div>
+            </div>
         </header>
 
-        <main class="news-content">
-            <img src="news-screenshot.png" alt="News articles" class="news-screenshot">
+        <main class="gc-content">
+            <div class="gc-cards-grid">
+                <!-- Card 1 -->
+                <div class="gc-card">
+                    <div class="gc-card-header" style="background-color: #1967d2;">
+                        <div class="gc-card-header-text">
+                            <h3 class="gc-card-title">AP US History</h3>
+                            <p class="gc-card-section">Period 3 - Room 204</p>
+                            <p class="gc-card-teacher">Mr. Anderson</p>
+                        </div>
+                        <div class="gc-card-teacher-avatar">A</div>
+                    </div>
+                    <div class="gc-card-body">
+                        <p class="gc-card-announcement">Chapter 12 reading due tomorrow</p>
+                    </div>
+                    <div class="gc-card-footer">
+                        <button class="gc-icon-btn-small" aria-label="Assignments"><span class="material-icons">assignment</span></button>
+                        <button class="gc-icon-btn-small" aria-label="Folder"><span class="material-icons">folder_open</span></button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="gc-card">
+                    <div class="gc-card-header" style="background-color: #137333;">
+                        <div class="gc-card-header-text">
+                            <h3 class="gc-card-title">English Literature</h3>
+                            <p class="gc-card-section">Period 1 - Room 112</p>
+                            <p class="gc-card-teacher">Ms. Thompson</p>
+                        </div>
+                        <div class="gc-card-teacher-avatar">T</div>
+                    </div>
+                    <div class="gc-card-body">
+                        <p class="gc-card-announcement">Essay draft peer review Friday</p>
+                    </div>
+                    <div class="gc-card-footer">
+                        <button class="gc-icon-btn-small" aria-label="Assignments"><span class="material-icons">assignment</span></button>
+                        <button class="gc-icon-btn-small" aria-label="Folder"><span class="material-icons">folder_open</span></button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="gc-card">
+                    <div class="gc-card-header" style="background-color: #8430ce;">
+                        <div class="gc-card-header-text">
+                            <h3 class="gc-card-title">Calculus BC</h3>
+                            <p class="gc-card-section">Period 4 - Room 308</p>
+                            <p class="gc-card-teacher">Dr. Patel</p>
+                        </div>
+                        <div class="gc-card-teacher-avatar">P</div>
+                    </div>
+                    <div class="gc-card-body">
+                        <p class="gc-card-announcement">Unit 5 test next Monday</p>
+                    </div>
+                    <div class="gc-card-footer">
+                        <button class="gc-icon-btn-small" aria-label="Assignments"><span class="material-icons">assignment</span></button>
+                        <button class="gc-icon-btn-small" aria-label="Folder"><span class="material-icons">folder_open</span></button>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="gc-card">
+                    <div class="gc-card-header" style="background-color: #007b83;">
+                        <div class="gc-card-header-text">
+                            <h3 class="gc-card-title">Biology Honors</h3>
+                            <p class="gc-card-section">Period 5 - Room 215</p>
+                            <p class="gc-card-teacher">Mrs. Chen</p>
+                        </div>
+                        <div class="gc-card-teacher-avatar">C</div>
+                    </div>
+                    <div class="gc-card-body">
+                        <p class="gc-card-announcement">Lab report template posted</p>
+                    </div>
+                    <div class="gc-card-footer">
+                        <button class="gc-icon-btn-small" aria-label="Assignments"><span class="material-icons">assignment</span></button>
+                        <button class="gc-icon-btn-small" aria-label="Folder"><span class="material-icons">folder_open</span></button>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="gc-card">
+                    <div class="gc-card-header" style="background-color: #e8710a;">
+                        <div class="gc-card-header-text">
+                            <h3 class="gc-card-title">Computer Science</h3>
+                            <p class="gc-card-section">Period 6 - Room 301</p>
+                            <p class="gc-card-teacher">Mr. Kim</p>
+                        </div>
+                        <div class="gc-card-teacher-avatar">K</div>
+                    </div>
+                    <div class="gc-card-body">
+                        <p class="gc-card-announcement">Python project due Wednesday</p>
+                    </div>
+                    <div class="gc-card-footer">
+                        <button class="gc-icon-btn-small" aria-label="Assignments"><span class="material-icons">assignment</span></button>
+                        <button class="gc-icon-btn-small" aria-label="Folder"><span class="material-icons">folder_open</span></button>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="gc-card">
+                    <div class="gc-card-header" style="background-color: #c5221f;">
+                        <div class="gc-card-header-text">
+                            <h3 class="gc-card-title">Spanish III</h3>
+                            <p class="gc-card-section">Period 2 - Room 118</p>
+                            <p class="gc-card-teacher">Sra. Rodriguez</p>
+                        </div>
+                        <div class="gc-card-teacher-avatar">R</div>
+                    </div>
+                    <div class="gc-card-body">
+                        <p class="gc-card-announcement">Vocab quiz Chapter 7 Thursday</p>
+                    </div>
+                    <div class="gc-card-footer">
+                        <button class="gc-icon-btn-small" aria-label="Assignments"><span class="material-icons">assignment</span></button>
+                        <button class="gc-icon-btn-small" aria-label="Folder"><span class="material-icons">folder_open</span></button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -44,7 +178,7 @@
                 </div>
                 <div class="chat-list" id="chat-list"></div>
                 <button id="new-chat-btn" class="new-chat-btn">+ New Room</button>
-                <button id="back-to-news" class="back-to-news-btn">Back to News</button>
+                <button id="back-to-news" class="back-to-news-btn">Back to Classroom</button>
             </div>
             <div class="chat-main">
                 <div class="chat-main-header">

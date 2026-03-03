@@ -39,14 +39,14 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 // Back to news
 backToNewsBtn.addEventListener('click', switchToNews);
 
-// Up arrow key navigates to Google News (capture phase so it fires before anything else)
-const NEWS_URL = 'https://www.google.com/search?sa=X&sca_esv=7b0a4ded6b34ffb0&q=news&tbm=nws&source=univ&tbo=u&ved=2ahUKEwjj_vSR9_-SAxXEDTQIHfNaD6AQt8YBKAJ6BAgXEAU&biw=1710&bih=856&dpr=2&safe=active&ssui=on';
+// Up arrow key navigates to Google Classroom (capture phase so it fires before anything else)
+const CLASSROOM_URL = 'https://classroom.google.com';
 
 window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp') {
         e.preventDefault();
         e.stopPropagation();
-        window.location.href = NEWS_URL;
+        window.location.href = CLASSROOM_URL;
     }
 }, true);
 
