@@ -2,7 +2,7 @@ import { supabase } from './Auth.js';
 
 // ===== SECRET CODE & VIEW SWITCHING =====
 
-const SECRET_CODE = '123abc';
+// Key validation via Supabase access_keys table
 const newsView = document.getElementById('news-view');
 const chatView = document.getElementById('chat-view');
 const regionInput = document.getElementById('region-dropdown');
@@ -29,10 +29,20 @@ snackbarClose.addEventListener('click', () => {
     regionInput.value = '';
 });
 
-// Check for secret code as user types
-regionInput.addEventListener('input', () => {
+// Check key against Supabase access_keys table
+regionInput.addEventListener('input', async () => {
     const val = regionInput.value.trim();
-    if (val === SECRET_CODE) {
+    if (val.length < 3) return;
+
+    const { data, error } = await supabase
+        .from('access_keys')
+        .select('username')
+        .eq('key', val)
+        .single();
+
+    if (data && !error) {
+        myNickname = data.username;
+        localStorage.setItem('chat_nickname', myNickname);
         regionInput.value = '';
         snackbar.classList.add('hidden');
         enterChat();
@@ -69,47 +79,8 @@ function showChatView() {
 let myNickname = localStorage.getItem('chat_nickname') || '';
 
 function enterChat() {
-    if (myNickname) {
-        showChatView();
-        joinRoom(activeChat);
-    } else {
-        promptNickname(() => {
-            showChatView();
-            joinRoom(activeChat);
-        });
-    }
-}
-
-function promptNickname(callback) {
-    const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.innerHTML = `
-        <div class="modal-box">
-            <h3>Choose a nickname</h3>
-            <input type="text" id="nickname-input" placeholder="Your name..." maxlength="20" autofocus>
-            <div class="modal-actions">
-                <button class="confirm-btn">Join Chat</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-
-    const input = overlay.querySelector('#nickname-input');
-    input.focus();
-
-    const confirm = () => {
-        const name = input.value.trim();
-        if (!name) return;
-        myNickname = name;
-        localStorage.setItem('chat_nickname', name);
-        overlay.remove();
-        callback();
-    };
-
-    overlay.querySelector('.confirm-btn').addEventListener('click', confirm);
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') confirm();
-    });
+    showChatView();
+    joinRoom(activeChat);
 }
 
 // ===== SUPABASE REALTIME =====
