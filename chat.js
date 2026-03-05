@@ -130,6 +130,30 @@ function promptNickname(callback) {
     });
 }
 
+// ===== FAKE TIMESTAMPS (4:00 PM – 9:00 PM) =====
+
+let lastFakeSeconds = 0; // seconds since 4:00 PM (0 = 4:00 PM, 18000 = 9:00 PM)
+
+function resetFakeTime() {
+    lastFakeSeconds = 0;
+}
+
+function nextFakeTime() {
+    // Add 20–25 seconds per message
+    lastFakeSeconds += 20 + Math.floor(Math.random() * 6);
+
+    // If past 9:00 PM (18000 seconds), restart from 4:00 PM
+    if (lastFakeSeconds >= 18000) {
+        lastFakeSeconds = 0;
+    }
+
+    const totalSeconds = lastFakeSeconds;
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const hours = 4 + Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}:${minutes.toString().padStart(2, '0')} PM`;
+}
+
 // ===== SUPABASE REALTIME =====
 
 let currentChannel = null;
@@ -163,11 +187,12 @@ async function joinRoom(roomId) {
         .order('created_at', { ascending: true });
 
     if (savedMsgs && savedMsgs.length > 0) {
+        resetFakeTime();
         chatRooms[roomId].messages = savedMsgs.map(msg => ({
             text: msg.text,
             sender: msg.sender,
             type: msg.sender === myNickname ? 'sent' : 'received',
-            time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            time: nextFakeTime()
         }));
     }
 
@@ -186,7 +211,7 @@ async function joinRoom(roomId) {
             text: msg.text,
             sender: msg.nickname,
             type: 'received',
-            time: msg.time
+            time: nextFakeTime()
         });
         renderMessages();
         renderChatList();
@@ -308,8 +333,7 @@ function sendMessage() {
     const chat = chatRooms[activeChat];
     if (!chat) return;
 
-    const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const time = nextFakeTime();
 
     // Add to local messages
     chat.messages.push({
