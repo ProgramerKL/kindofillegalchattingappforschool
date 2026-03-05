@@ -85,6 +85,13 @@ function switchToNews() {
     newsView.classList.remove('hidden');
 }
 
+// Auto-hide chat when user switches away from the tab
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && !chatView.classList.contains('hidden')) {
+        switchToNews();
+    }
+});
+
 function showChatView() {
     newsView.classList.add('hidden');
     chatView.classList.remove('hidden');
