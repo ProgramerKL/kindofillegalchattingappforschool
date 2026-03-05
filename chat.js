@@ -117,6 +117,7 @@ window.addEventListener('keydown', (e) => {
 function switchToNews() {
     chatView.classList.add('hidden');
     newsView.classList.remove('hidden');
+    document.getElementById('emergency-btn').classList.add('hidden');
 }
 
 // Auto-hide chat when user switches away (tab switch, alt+tab, cmd+tab, etc.)
@@ -286,9 +287,7 @@ async function joinRoom(roomId) {
 
     // Listen for presence (who's online)
     channel.on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState();
-        const count = Object.keys(state).length;
-        document.getElementById('presence-count').textContent = `${count} online`;
+        // Always show 0 online
     });
 
     channel.on('presence', { event: 'join' }, ({ key }) => {
@@ -360,9 +359,9 @@ function renderMessages() {
     if (!chat || chat.messages.length === 0) {
         container.innerHTML = `
             <div class="chat-welcome">
-                <span class="welcome-icon">🔒</span>
-                <h3>Welcome to the secret chat</h3>
-                <p>Messages are live. Anyone with the code can join.</p>
+                <span class="welcome-icon">💬</span>
+                <h3>No messages yet</h3>
+                <p>Be the first to say something.</p>
             </div>
         `;
         return;
