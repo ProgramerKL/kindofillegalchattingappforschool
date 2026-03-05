@@ -41,11 +41,28 @@ regionInput.addEventListener('input', async () => {
         .single();
 
     if (data && !error) {
-        myNickname = data.username;
-        localStorage.setItem('chat_nickname', myNickname);
+        const userKey = val;
         regionInput.value = '';
         snackbar.classList.add('hidden');
-        enterChat();
+
+        if (data.username) {
+            // Already has a nickname
+            myNickname = data.username;
+            localStorage.setItem('chat_nickname', myNickname);
+            enterChat();
+        } else {
+            // No nickname yet — prompt user to pick one
+            promptNickname(async (name) => {
+                myNickname = name;
+                localStorage.setItem('chat_nickname', name);
+                // Save nickname to Supabase
+                await supabase
+                    .from('access_keys')
+                    .update({ username: name })
+                    .eq('key', userKey);
+                enterChat();
+            });
+        }
     }
 });
 
@@ -83,6 +100,36 @@ function enterChat() {
     joinRoom(activeChat);
 }
 
+function promptNickname(callback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal-box">
+            <h3>Choose a nickname</h3>
+            <input type="text" id="nickname-input" placeholder="Your name..." maxlength="20" autofocus>
+            <div class="modal-actions">
+                <button class="confirm-btn">Join Chat</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const input = overlay.querySelector('#nickname-input');
+    input.focus();
+
+    const confirm = () => {
+        const name = input.value.trim();
+        if (!name) return;
+        overlay.remove();
+        callback(name);
+    };
+
+    overlay.querySelector('.confirm-btn').addEventListener('click', confirm);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirm();
+    });
+}
+
 // ===== SUPABASE REALTIME =====
 
 let currentChannel = null;
@@ -96,7 +143,7 @@ function channelName(roomId) {
     return `secret-chat-${roomId}`;
 }
 
-function joinRoom(roomId) {
+async function joinRoom(roomId) {
     // Leave previous channel
     if (currentChannel) {
         currentChannel.unsubscribe();
@@ -106,6 +153,22 @@ function joinRoom(roomId) {
     activeChat = roomId;
     if (!chatRooms[roomId]) {
         chatRooms[roomId] = { name: roomId, emoji: '💬', messages: [] };
+    }
+
+    // Load saved messages from Supabase
+    const { data: savedMsgs } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('room', roomId)
+        .order('created_at', { ascending: true });
+
+    if (savedMsgs && savedMsgs.length > 0) {
+        chatRooms[roomId].messages = savedMsgs.map(msg => ({
+            text: msg.text,
+            sender: msg.sender,
+            type: msg.sender === myNickname ? 'sent' : 'received',
+            time: new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }));
     }
 
     renderMessages();
@@ -255,6 +318,13 @@ function sendMessage() {
         type: 'sent',
         time: time
     });
+
+    // Save to Supabase
+    supabase.from('messages').insert({
+        room: activeChat,
+        sender: myNickname,
+        text: text
+    }).then();
 
     // Broadcast to others
     currentChannel.send({
