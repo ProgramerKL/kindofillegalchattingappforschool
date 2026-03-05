@@ -95,8 +95,24 @@ function showChatView() {
 
 let myNickname = localStorage.getItem('chat_nickname') || '';
 
-function enterChat() {
+async function enterChat() {
     showChatView();
+
+    // Load all rooms from Supabase
+    const { data: rooms } = await supabase
+        .from('rooms')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+    if (rooms) {
+        for (const room of rooms) {
+            if (!chatRooms[room.id]) {
+                chatRooms[room.id] = { name: room.name, emoji: room.emoji, messages: [] };
+            }
+        }
+    }
+
+    renderChatList();
     joinRoom(activeChat);
 }
 
@@ -395,12 +411,15 @@ document.getElementById('new-chat-btn').addEventListener('click', () => {
         if (e.target === overlay) close();
     });
 
-    const create = () => {
+    const create = async () => {
         const name = nameInput.value.trim();
         if (!name) return;
         const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
         const emojis = ['💬', '🗨️', '💭', '📩', '✉️', '🔑', '🌙', '⚡'];
         const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+
+        // Save room to Supabase
+        await supabase.from('rooms').upsert({ id, name, emoji });
 
         chatRooms[id] = { name, emoji, messages: [] };
         joinRoom(id);
