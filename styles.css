@@ -259,7 +259,7 @@ body {
 }
 
 .gc-card-header-img3 {
-    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8gTkXQ6x9sADJTVs57L0wdZP3I0nHLvvjhCgiXHiI3oMPwou0") !important;
+    background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8gTkXQ6x9sADJTVs57L0wdZP3I0nHLvvjhCgiXHiI3oMPwou0") !important;
     background-size: cover;
     background-position: center;
 }
