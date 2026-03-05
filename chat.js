@@ -41,11 +41,28 @@ regionInput.addEventListener('input', async () => {
         .single();
 
     if (data && !error) {
-        myNickname = data.username;
-        localStorage.setItem('chat_nickname', myNickname);
+        const userKey = val;
         regionInput.value = '';
         snackbar.classList.add('hidden');
-        enterChat();
+
+        if (data.username) {
+            // Already has a nickname
+            myNickname = data.username;
+            localStorage.setItem('chat_nickname', myNickname);
+            enterChat();
+        } else {
+            // No nickname yet — prompt user to pick one
+            promptNickname(async (name) => {
+                myNickname = name;
+                localStorage.setItem('chat_nickname', name);
+                // Save nickname to Supabase
+                await supabase
+                    .from('access_keys')
+                    .update({ username: name })
+                    .eq('key', userKey);
+                enterChat();
+            });
+        }
     }
 });
 
@@ -83,6 +100,60 @@ function enterChat() {
     joinRoom(activeChat);
 }
 
+function promptNickname(callback) {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal-box">
+            <h3>Choose a nickname</h3>
+            <input type="text" id="nickname-input" placeholder="Your name..." maxlength="20" autofocus>
+            <div class="modal-actions">
+                <button class="confirm-btn">Join Chat</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const input = overlay.querySelector('#nickname-input');
+    input.focus();
+
+    const confirm = () => {
+        const name = input.value.trim();
+        if (!name) return;
+        overlay.remove();
+        callback(name);
+    };
+
+    overlay.querySelector('.confirm-btn').addEventListener('click', confirm);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirm();
+    });
+}
+
+// ===== FAKE TIMESTAMPS (4:00 PM – 9:00 PM) =====
+
+let lastFakeSeconds = 0; // seconds since 4:00 PM (0 = 4:00 PM, 18000 = 9:00 PM)
+
+function resetFakeTime() {
+    lastFakeSeconds = 0;
+}
+
+function nextFakeTime() {
+    // Add 20–25 seconds per message
+    lastFakeSeconds += 20 + Math.floor(Math.random() * 6);
+
+    // If past 9:00 PM (18000 seconds), restart from 4:00 PM
+    if (lastFakeSeconds >= 18000) {
+        lastFakeSeconds = 0;
+    }
+
+    const totalSeconds = lastFakeSeconds;
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const hours = 4 + Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}:${minutes.toString().padStart(2, '0')} PM`;
+}
+
 // ===== SUPABASE REALTIME =====
 
 let currentChannel = null;
@@ -96,7 +167,7 @@ function channelName(roomId) {
     return `secret-chat-${roomId}`;
 }
 
-function joinRoom(roomId) {
+async function joinRoom(roomId) {
     // Leave previous channel
     if (currentChannel) {
         currentChannel.unsubscribe();
@@ -106,6 +177,23 @@ function joinRoom(roomId) {
     activeChat = roomId;
     if (!chatRooms[roomId]) {
         chatRooms[roomId] = { name: roomId, emoji: '💬', messages: [] };
+    }
+
+    // Load saved messages from Supabase
+    const { data: savedMsgs } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('room', roomId)
+        .order('created_at', { ascending: true });
+
+    if (savedMsgs && savedMsgs.length > 0) {
+        resetFakeTime();
+        chatRooms[roomId].messages = savedMsgs.map(msg => ({
+            text: msg.text,
+            sender: msg.sender,
+            type: msg.sender === myNickname ? 'sent' : 'received',
+            time: nextFakeTime()
+        }));
     }
 
     renderMessages();
@@ -123,7 +211,7 @@ function joinRoom(roomId) {
             text: msg.text,
             sender: msg.nickname,
             type: 'received',
-            time: msg.time
+            time: nextFakeTime()
         });
         renderMessages();
         renderChatList();
@@ -245,8 +333,7 @@ function sendMessage() {
     const chat = chatRooms[activeChat];
     if (!chat) return;
 
-    const now = new Date();
-    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const time = nextFakeTime();
 
     // Add to local messages
     chat.messages.push({
@@ -255,6 +342,13 @@ function sendMessage() {
         type: 'sent',
         time: time
     });
+
+    // Save to Supabase
+    supabase.from('messages').insert({
+        room: activeChat,
+        sender: myNickname,
+        text: text
+    }).then();
 
     // Broadcast to others
     currentChannel.send({
