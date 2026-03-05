@@ -14,9 +14,22 @@ const snackbar = document.getElementById('gc-snackbar');
 const sidebarBerman = document.getElementById('sidebar-berman');
 const snackbarClose = document.getElementById('gc-snackbar-close');
 
-// Click sidebar item to show snackbar
-sidebarBerman.addEventListener('click', (e) => {
+// Click sidebar item to show snackbar (blocked during shutdown)
+sidebarBerman.addEventListener('click', async (e) => {
     e.preventDefault();
+
+    // Check if shutdown is active
+    const { data: setting } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'shutdown')
+        .single();
+
+    if (setting && setting.value !== 'false') {
+        const shutdownTime = parseInt(setting.value);
+        if (Date.now() - shutdownTime < 3600000) return; // Still locked — don't show snackbar
+    }
+
     snackbar.classList.toggle('hidden');
     if (!snackbar.classList.contains('hidden')) {
         regionInput.focus();
@@ -34,6 +47,26 @@ regionInput.addEventListener('input', async () => {
     const val = regionInput.value.trim();
     if (val.length < 3) return;
 
+    // Check if shutdown is active
+    const { data: setting } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'shutdown')
+        .single();
+
+    if (setting && setting.value !== 'false') {
+        // Shutdown is active — check if the lockdown has expired
+        const shutdownTime = parseInt(setting.value);
+        const now = Date.now();
+        if (now - shutdownTime < 3600000) {
+            // Still locked out
+            regionInput.value = '';
+            return;
+        }
+        // Lockdown expired — re-enable
+        await supabase.from('settings').update({ value: 'false' }).eq('key', 'shutdown');
+    }
+
     const { data, error } = await supabase
         .from('access_keys')
         .select('username')
@@ -44,6 +77,7 @@ regionInput.addEventListener('input', async () => {
         const userKey = val;
         regionInput.value = '';
         snackbar.classList.add('hidden');
+        localStorage.setItem('chat_access_key', userKey);
 
         if (data.username) {
             // Already has a nickname
@@ -109,6 +143,11 @@ let myNickname = localStorage.getItem('chat_nickname') || '';
 
 async function enterChat() {
     showChatView();
+
+    // Show emergency button only for kyle with the right access code
+    if (myNickname === 'kyle' && localStorage.getItem('chat_access_key') === 'mx4k7p') {
+        document.getElementById('emergency-btn').classList.remove('hidden');
+    }
 
     // Load all rooms from Supabase
     const { data: rooms } = await supabase
@@ -451,6 +490,53 @@ function escapeHtml(text) {
     div.textContent = text;
     return div.innerHTML;
 }
+
+// ===== EMERGENCY SHUTDOWN =====
+
+document.getElementById('emergency-btn').addEventListener('click', () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+        <div class="modal-box">
+            <h3 style="color: #ef4444;">Emergency Shutdown</h3>
+            <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 12px;">This will wipe all messages, rooms, and lock everyone out for 1 hour.</p>
+            <div class="modal-actions">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn" style="background: #ef4444;">Nuke Everything</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+
+    const close = () => overlay.remove();
+    overlay.querySelector('.cancel-btn').addEventListener('click', close);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+
+    overlay.querySelector('.confirm-btn').addEventListener('click', async () => {
+        // Set shutdown timestamp
+        await supabase.from('settings').update({ value: String(Date.now()) }).eq('key', 'shutdown');
+
+        // Wipe all messages and non-general rooms
+        await supabase.from('messages').delete().neq('id', '');
+        await supabase.from('rooms').delete().neq('id', 'general');
+
+        // Disconnect realtime
+        if (currentChannel) {
+            currentChannel.unsubscribe();
+            currentChannel = null;
+        }
+
+        // Clear local state
+        localStorage.removeItem('chat_nickname');
+        myNickname = '';
+        for (const key of Object.keys(chatRooms)) delete chatRooms[key];
+        chatRooms.general = { name: 'General', emoji: '💬', messages: [] };
+        activeChat = 'general';
+
+        close();
+        switchToNews();
+    });
+});
 
 // Initial render
 renderChatList();
