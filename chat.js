@@ -14,20 +14,48 @@ const snackbar = document.getElementById('gc-snackbar');
 const sidebarBerman = document.getElementById('sidebar-berman');
 const snackbarClose = document.getElementById('gc-snackbar-close');
 
+// Get or create the shutdown setting row (cached)
+let cachedShutdown = null;
+let shutdownFetchedAt = 0;
+
+async function getShutdownSetting() {
+    // Use cache if fetched within last 5 seconds
+    if (cachedShutdown && Date.now() - shutdownFetchedAt < 5000) return cachedShutdown;
+
+    const { data } = await supabase
+        .from('settings')
+        .select('value')
+        .eq('key', 'shutdown')
+        .single();
+    if (data) {
+        cachedShutdown = data;
+        shutdownFetchedAt = Date.now();
+        return data;
+    }
+    // Row missing — recreate it
+    await supabase.from('settings').insert({ key: 'shutdown', value: 'false' });
+    cachedShutdown = { value: 'false' };
+    shutdownFetchedAt = Date.now();
+    return cachedShutdown;
+}
+
+// Pre-fetch shutdown state on load
+getShutdownSetting();
+
 // Click sidebar item to show snackbar (blocked during shutdown)
 sidebarBerman.addEventListener('click', async (e) => {
     e.preventDefault();
 
     // Check if shutdown is active
-    const { data: setting } = await supabase
-        .from('settings')
-        .select('value')
-        .eq('key', 'shutdown')
-        .single();
+    const setting = await getShutdownSetting();
 
-    if (setting && setting.value !== 'false') {
+    if (setting.value !== 'false') {
         const shutdownTime = parseInt(setting.value);
-        if (Date.now() - shutdownTime < 3600000) return; // Still locked — don't show snackbar
+        if (Date.now() - shutdownTime < 3600000) {
+            // Lockdown active — redirect to real Classroom page
+            window.location.href = 'https://classroom.google.com/c/ODExNjEwMDEwMDA0';
+            return;
+        }
     }
 
     snackbar.classList.toggle('hidden');
@@ -48,13 +76,9 @@ regionInput.addEventListener('input', async () => {
     if (val.length < 3) return;
 
     // Check if shutdown is active
-    const { data: setting } = await supabase
-        .from('settings')
-        .select('value')
-        .eq('key', 'shutdown')
-        .single();
+    const setting = await getShutdownSetting();
 
-    if (setting && setting.value !== 'false') {
+    if (setting.value !== 'false') {
         // Shutdown is active — check if the lockdown has expired
         const shutdownTime = parseInt(setting.value);
         const now = Date.now();
@@ -118,6 +142,8 @@ function switchToNews() {
     chatView.classList.add('hidden');
     newsView.classList.remove('hidden');
     document.getElementById('emergency-btn').classList.add('hidden');
+    snackbar.classList.add('hidden');
+    regionInput.value = '';
 }
 
 // Auto-hide chat when user switches away (tab switch, alt+tab, cmd+tab, etc.)
@@ -513,7 +539,7 @@ document.getElementById('emergency-btn').addEventListener('click', () => {
 
     overlay.querySelector('.confirm-btn').addEventListener('click', async () => {
         // Set shutdown timestamp
-        await supabase.from('settings').update({ value: String(Date.now()) }).eq('key', 'shutdown');
+        await supabase.from('settings').upsert({ key: 'shutdown', value: String(Date.now()) });
 
         // Wipe all messages and non-general rooms
         await supabase.from('messages').delete().neq('id', '');
