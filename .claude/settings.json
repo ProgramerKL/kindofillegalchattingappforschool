@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open /Users/kyleliu/Library/LaunchAgents/com.kyle.autoscreen.plist)",
+      "Bash(open -R /Users/kyleliu/Library/LaunchAgents/com.kyle.autoscreen.plist)",
+      "Bash(mdls /Users/kyleliu/Library/LaunchAgents/com.kyle.autoscreen.plist)",
+      "Read(//Applications/AutoScreen.app/Contents/**)",
+      "Bash(open -R \"/Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/V/#s/ScheduledScreenshots\")",
+      "Bash(launchctl load:*)",
+      "Bash(open /Users/kyleliu/Library/LaunchAgents/)",
+      "Bash(find /Users/kyleliu -maxdepth 4 -type d -iname *screenshot*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
