@@ -32,8 +32,7 @@ async function getShutdownSetting() {
         shutdownFetchedAt = Date.now();
         return data;
     }
-    // Row missing — recreate it
-    await supabase.from('settings').insert({ key: 'shutdown', value: 'false' });
+    // Row missing — treat as not locked
     cachedShutdown = { value: 'false' };
     shutdownFetchedAt = Date.now();
     return cachedShutdown;
@@ -539,7 +538,11 @@ document.getElementById('emergency-btn').addEventListener('click', () => {
 
     overlay.querySelector('.confirm-btn').addEventListener('click', async () => {
         // Set shutdown timestamp
-        await supabase.from('settings').upsert({ key: 'shutdown', value: String(Date.now()) });
+        const now = String(Date.now());
+        await supabase.from('settings').update({ value: now }).eq('key', 'shutdown');
+        // Update cache immediately so lockdown takes effect without waiting
+        cachedShutdown = { value: now };
+        shutdownFetchedAt = Date.now();
 
         // Wipe all messages and non-general rooms
         await supabase.from('messages').delete().neq('id', '');
