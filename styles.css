@@ -109,8 +109,8 @@ body {
 
 .gc-sidebar {
     width: 280px;
-    background: #f5f5f6;
-    border-right: 1px solid #e0e0e0;
+    background: #fbfbfc;
+    border-right: none;
     padding: 8px 0;
     flex-shrink: 0;
     overflow-y: auto;
@@ -135,13 +135,17 @@ body {
 }
 
 .gc-nav-item.active {
-    background: #e8f0fe;
-    color: #1967d2;
+    background: transparent;
+    color: #1a73e8;
     font-weight: 500;
 }
 
-.gc-nav-item.active .material-icons {
-    color: #1967d2;
+.gc-nav-item.active .material-icons,
+.gc-nav-item.active .material-icons-outlined {
+    color: #1a73e8;
+    background: #d3e3fd;
+    border-radius: 14px;
+    padding: 4px 16px;
 }
 
 .gc-nav-item .material-icons,
@@ -160,7 +164,7 @@ body {
     padding: 0 24px 0 24px;
     height: 48px;
     gap: 12px;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: #202124;
     cursor: pointer;
@@ -195,11 +199,12 @@ body {
 
 .gc-nav-class {
     gap: 16px;
+    margin-top: -3px;
 }
 
 .gc-nav-class-dot {
-    width: 32px;
-    height: 32px;
+    width: 19.5px;
+    height: 19.5px;
     border-radius: 50%;
     color: #fff;
     display: flex;
@@ -218,8 +223,7 @@ body {
 }
 
 .gc-nav-divider {
-    height: 1px;
-    background: #e0e0e0;
+    height: 0;
     margin: 8px 0;
 }
 
@@ -227,12 +231,12 @@ body {
 
 .gc-content {
     flex: 1;
-    padding: 24px 24px 24px 32px;
+    padding: 24px 24px 24px 21.5px;
 }
 
 .gc-cards-grid {
     display: grid;
-    grid-template-columns: repeat(3, 265px);
+    grid-template-columns: repeat(3, 268px);
     gap: 28px;
 }
 
@@ -286,8 +290,8 @@ body {
 }
 
 .gc-card-title {
-    font-size: 1.1rem;
-    font-weight: 200;
+    font-size: 1.225rem;
+    font-weight: 100;
     margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -306,14 +310,14 @@ body {
 }
 
 .gc-card-teacher-avatar {
-    width: 72px;
-    height: 72px;
+    width: 69px;
+    height: 69px;
     border-radius: 50%;
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 400;
     flex-shrink: 0;
     position: absolute;
@@ -324,7 +328,7 @@ body {
 
 .gc-card-body {
     padding: 16px;
-    min-height: 125px;
+    min-height: 135px;
     border-bottom: 1px solid #dadce0;
 }
 
@@ -673,6 +677,29 @@ body {
     background: linear-gradient(135deg, #818cf8, #6366f1);
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
     transform: translateY(-1px);
+}
+
+.chess-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.chess-btn:hover {
+    background: rgba(99, 102, 241, 0.15);
+    color: #c7d2fe;
+}
+
+.chess-btn.active {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+}
+
+.chess-frame {
+    flex: 1;
+    border: none;
+    background: #1a1a2e;
 }
 
 .back-to-news-btn {
