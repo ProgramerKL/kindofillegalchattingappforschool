@@ -6,8 +6,9 @@
     <title>Google Classroom</title>
     <link rel="icon" href="https://ssl.gstatic.com/classroom/favicon.png">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@100;200;300;400;500;700&family=Google+Sans+Text:wght@100;200;300;400;500&family=Roboto:wght@100;200;300;400;500&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
 </head>
 <body>
     <!-- CLASSROOM VIEW (visible by default) -->
@@ -37,36 +38,38 @@
             <!-- Left Sidebar -->
             <nav class="gc-sidebar">
                 <a class="gc-nav-item active" href="#">
-                    <span class="material-icons">home</span>
+                    <span class="material-symbols-outlined gc-home-icon" style="font-variation-settings: 'FILL' 0, 'wght' 400;">home</span>
                     <span>Home</span>
                 </a>
-                <a class="gc-nav-item" href="#">
+                <a class="gc-nav-item" href="https://classroom.google.com/calendar/this-week/course/all">
                     <span class="material-icons">calendar_today</span>
                     <span>Calendar</span>
                 </a>
                 <div class="gc-nav-section">
-                    <div class="gc-nav-section-header">
+                    <div class="gc-nav-section-header" id="enrolled-toggle">
                         <span class="material-icons-outlined" style="font-size: 20px;">school</span>
                         <span>Enrolled</span>
-                        <span class="material-icons gc-nav-chevron">expand_less</span>
+                        <span class="material-icons gc-nav-chevron" id="enrolled-chevron">expand_less</span>
                     </div>
                 </div>
-                <a class="gc-nav-item" href="#">
-                    <span class="material-icons-outlined">fact_check</span>
-                    <span>To-do</span>
-                </a>
-                <a class="gc-nav-item gc-nav-class" id="sidebar-berman" href="#">
-                    <span class="gc-nav-class-dot" style="background: transparent; color: #4285f4;">M</span>
-                    <span>Ms. Berman/Mr. Sia- Grade 7 T...</span>
-                </a>
-                <a class="gc-nav-item gc-nav-class" href="https://classroom.google.com/c/Nzk2Mjc3NTcyNjg4">
-                    <span class="gc-nav-class-dot" style="background: rgba(232, 113, 10, 0.15); color: #e8710a;">7</span>
-                    <span>7C (Sia)-Français avec madam...</span>
-                </a>
-                <a class="gc-nav-item gc-nav-class" href="https://classroom.google.com/c/Nzk1ODk5MzU5MjMy">
-                    <span class="gc-nav-class-dot" style="background: transparent; color: #424242;">7</span>
-                    <span>7C Sia & Berman (2025-2026)</span>
-                </a>
+                <div id="enrolled-items">
+                    <a class="gc-nav-item" href="#">
+                        <span class="material-icons-outlined">fact_check</span>
+                        <span>To-do</span>
+                    </a>
+                    <a class="gc-nav-item gc-nav-class" id="sidebar-berman" href="#">
+                        <span class="gc-nav-class-dot" style="background: transparent; color: #4285f4;">M</span>
+                        <span>Ms. Berman/Mr. Sia- Grade 7 T...</span>
+                    </a>
+                    <a class="gc-nav-item gc-nav-class" href="https://classroom.google.com/c/Nzk2Mjc3NTcyNjg4">
+                        <span class="gc-nav-class-dot" style="background: rgba(232, 113, 10, 0.15); color: #e8710a;">7</span>
+                        <span>7C (Sia)-Français avec madam...</span>
+                    </a>
+                    <a class="gc-nav-item gc-nav-class" href="https://classroom.google.com/c/Nzk1ODk5MzU5MjMy">
+                        <span class="gc-nav-class-dot" style="background: transparent; color: #424242;">7</span>
+                        <span>7C Sia & Berman (2025-2026)</span>
+                    </a>
+                </div>
                 <div class="gc-nav-divider"></div>
                 <a class="gc-nav-item" href="https://classroom.google.com/h/archived">
                     <span class="material-icons-outlined">archive</span>
@@ -88,7 +91,7 @@
                                 <h3 class="gc-card-title">Ms. Berman/Mr. Sia- Gr...</h3>
                                 <p class="gc-card-teacher">Paula Schultz</p>
                             </div>
-                            <div class="gc-card-teacher-avatar" style="background-color: #007b83;">P</div>
+                            <div class="gc-card-teacher-avatar" style="background-color: #13877b;">P</div>
                         </div>
                         <div class="gc-card-body"></div>
                         <div class="gc-card-footer">
@@ -105,7 +108,7 @@
                                 <h3 class="gc-card-title">7C (Sia)-Français avec ...</h3>
                                 <p class="gc-card-teacher">Christina Ghobrial</p>
                             </div>
-                            <div class="gc-card-teacher-avatar" style="background-color: #3b78e7;">C</div>
+                            <div class="gc-card-teacher-avatar" style="background-color: #1386cf;">C</div>
                         </div>
                         <div class="gc-card-body"></div>
                         <div class="gc-card-footer">
@@ -168,6 +171,7 @@
                     <span id="presence-count">0 online</span>
                 </div>
                 <div class="chat-list" id="chat-list"></div>
+                <button id="chess-btn" class="chess-btn">♟ Chess</button>
                 <button id="new-chat-btn" class="new-chat-btn">+ New Room</button>
                 <button id="back-to-news" class="back-to-news-btn">Back to Classroom</button>
             </div>
@@ -182,6 +186,7 @@
                     <button id="send-btn">Send</button>
                 </div>
             </div>
+            <iframe id="chess-frame" class="chess-frame hidden" src="chess/index.html"></iframe>
         </div>
     </div>
 

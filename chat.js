@@ -137,7 +137,14 @@ window.addEventListener('keydown', (e) => {
     }
 }, true);
 
+let chessWasOpen = false;
+
 function switchToNews() {
+    // Remember if chess was open so we can restore it
+    const chessFrame = document.getElementById('chess-frame');
+    if (chessFrame && !chessFrame.classList.contains('hidden')) {
+        chessWasOpen = true;
+    }
     chatView.classList.add('hidden');
     newsView.classList.remove('hidden');
     document.getElementById('emergency-btn').classList.add('hidden');
@@ -145,22 +152,58 @@ function switchToNews() {
     regionInput.value = '';
 }
 
+// Enrolled section fold/unfold toggle
+const enrolledToggle = document.getElementById('enrolled-toggle');
+const enrolledItems = document.getElementById('enrolled-items');
+const enrolledChevron = document.getElementById('enrolled-chevron');
+enrolledToggle.addEventListener('click', () => {
+    const collapsed = enrolledItems.classList.toggle('hidden');
+    enrolledChevron.textContent = collapsed ? 'expand_more' : 'expand_less';
+});
+
 // Auto-hide chat when user switches away (tab switch, alt+tab, cmd+tab, etc.)
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && !chatView.classList.contains('hidden')) {
+        const chessFrame = document.getElementById('chess-frame');
+        if (chessFrame && !chessFrame.classList.contains('hidden')) {
+            chessFrame.contentWindow.postMessage('pause-clock', '*');
+        }
         switchToNews();
     }
 });
 window.addEventListener('blur', () => {
     if (!chatView.classList.contains('hidden')) {
-        switchToNews();
+        const chessFrame = document.getElementById('chess-frame');
+        const chessIsOpen = chessFrame && !chessFrame.classList.contains('hidden');
+        if (chessIsOpen) {
+            // Tiny delay to let document.hidden update, then check if it's a real app switch
+            requestAnimationFrame(() => {
+                if (document.hidden || !document.hasFocus()) {
+                    // Pause chess timer via postMessage
+                    chessFrame.contentWindow.postMessage('pause-clock', '*');
+                    switchToNews();
+                }
+            });
+        } else {
+            switchToNews();
+        }
     }
 });
 
 function showChatView() {
     newsView.classList.add('hidden');
     chatView.classList.remove('hidden');
-    document.getElementById('chat-input').focus();
+    // Restore chess view if it was open before blur
+    const chessFrame = document.getElementById('chess-frame');
+    if (chessWasOpen && chessFrame) {
+        document.querySelector('.chat-main').classList.add('hidden');
+        chessFrame.classList.remove('hidden');
+        document.getElementById('chess-btn').classList.add('active');
+        chessFrame.contentWindow.postMessage('resume-clock', '*');
+        chessWasOpen = false;
+    } else {
+        document.getElementById('chat-input').focus();
+    }
 }
 
 // ===== NICKNAME =====
@@ -369,6 +412,7 @@ function renderChatList() {
             </div>
         `;
         item.addEventListener('click', () => {
+            hideChess();
             joinRoom(id);
             document.getElementById('chat-main-name').textContent = chat.name;
             document.querySelector('.chat-main-avatar').textContent = chat.emoji;
@@ -564,6 +608,39 @@ document.getElementById('emergency-btn').addEventListener('click', () => {
         close();
         switchToNews();
     });
+});
+
+// ===== CHESS MINI-GAME TOGGLE =====
+
+const chessBtn = document.getElementById('chess-btn');
+const chessFrame = document.getElementById('chess-frame');
+const chatMain = document.querySelector('.chat-main');
+
+function showChess() {
+    chatMain.classList.add('hidden');
+    chessFrame.classList.remove('hidden');
+    chessBtn.classList.add('active');
+    document.getElementById('chat-main-name').textContent = 'Chess';
+    document.querySelector('.chat-main-avatar').textContent = '♟';
+}
+
+function hideChess() {
+    chessFrame.classList.add('hidden');
+    chatMain.classList.remove('hidden');
+    chessBtn.classList.remove('active');
+    const chat = chatRooms[activeChat];
+    if (chat) {
+        document.getElementById('chat-main-name').textContent = chat.name;
+        document.querySelector('.chat-main-avatar').textContent = chat.emoji;
+    }
+}
+
+chessBtn.addEventListener('click', () => {
+    if (!chessFrame.classList.contains('hidden')) {
+        hideChess();
+    } else {
+        showChess();
+    }
 });
 
 // Initial render
