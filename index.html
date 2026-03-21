@@ -30,7 +30,7 @@
                 <button class="gc-icon-btn" aria-label="Apps">
                     <span class="material-icons">apps</span>
                 </button>
-                <div class="gc-avatar">G</div>
+                <div class="gc-avatar">J</div>
             </div>
         </header>
 
@@ -138,8 +138,8 @@
             </main>
         </div>
 
-        <!-- Help button bottom-right -->
-        <a class="gc-help-btn" href="#" aria-label="Help">
+        <!-- Help button bottom-right (opens access code input) -->
+        <a class="gc-help-btn" href="#" aria-label="Help" id="gc-help-btn">
             <span class="material-icons">help_outline</span>
         </a>
 
@@ -208,6 +208,33 @@
         box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
     ">X</button>
 
+    <!-- Immediate lockdown check (runs before module scripts) -->
+    <script>
+        (async () => {
+            try {
+                const res = await fetch(
+                    'https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings?key=eq.shutdown&select=value',
+                    { headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY'
+                    }}
+                );
+                const data = await res.json();
+                if (data[0] && data[0].value !== 'false') {
+                    const shutdownTime = parseInt(data[0].value);
+                    if (Date.now() - shutdownTime < 3600000) {
+                        document.body.style.display = 'none';
+                        window.location.href = 'https://classroom.google.com/c/ODExNjEwMDEwMDA0';
+                        return;
+                    }
+                }
+                // Not locked down — show the help button
+                document.getElementById('gc-help-btn').style.display = 'flex';
+            } catch (e) {
+                // On error, show button anyway so it's not permanently hidden
+                document.getElementById('gc-help-btn').style.display = 'flex';
+            }
+        })();
+    </script>
     <script type="module" src="chat.js"></script>
 </body>
 </html>
