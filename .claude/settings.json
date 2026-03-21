@@ -35,7 +35,13 @@
       "Bash(git checkout:*)",
       "Read(//Applications/**)",
       "Bash(hdiutil attach:*)",
-      "Read(//Volumes/Legacy Launcher Dev 1/**)"
+      "Read(//Volumes/Legacy Launcher Dev 1/**)",
+      "Bash(curl -s 'https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings?key=eq.shutdown&select=value' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY')",
+      "Bash(curl -s -X PATCH 'https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings?key=eq.shutdown' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0' -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{\"\"value\"\": \"\"false\"\"}')",
+      "Bash(curl -s -X PATCH 'https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings?key=eq.shutdown' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0' -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{\"\"value\"\": \"\"1774058800000\"\"}')",
+      "Bash(git -C /Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/kindofillegalchattingappforschool status)",
+      "Bash(git -C /Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/kindofillegalchattingappforschool diff)",
+      "Bash(git -C /Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/kindofillegalchattingappforschool log --oneline -3)"
     ],
     "additionalDirectories": [
       "/Applications"

@@ -86,7 +86,7 @@ body {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #1a73e8;
+    background: #1b5e20;
     color: #fff;
     display: flex;
     align-items: center;
@@ -422,7 +422,7 @@ body {
     border-radius: 50%;
     background: #fff;
     border: 1px solid #dadce0;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     color: #5f6368;

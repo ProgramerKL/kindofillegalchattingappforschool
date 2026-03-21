@@ -13,6 +13,7 @@ const backToNewsBtn = document.getElementById('back-to-news');
 const snackbar = document.getElementById('gc-snackbar');
 const sidebarBerman = document.getElementById('sidebar-berman');
 const snackbarClose = document.getElementById('gc-snackbar-close');
+const helpBtn = document.getElementById('gc-help-btn');
 
 // Get or create the shutdown setting row (cached)
 let cachedShutdown = null;
@@ -41,32 +42,33 @@ async function getShutdownSetting() {
 // Pre-fetch shutdown state on load
 getShutdownSetting();
 
-// Click sidebar item to show snackbar (blocked during shutdown)
-sidebarBerman.addEventListener('click', async (e) => {
+// Click sidebar item — redirect to real Classroom page
+sidebarBerman.addEventListener('click', (e) => {
     e.preventDefault();
-
-    // Check if shutdown is active
-    const setting = await getShutdownSetting();
-
-    if (setting.value !== 'false') {
-        const shutdownTime = parseInt(setting.value);
-        if (Date.now() - shutdownTime < 3600000) {
-            // Lockdown active — redirect to real Classroom page
-            window.location.href = 'https://classroom.google.com/c/ODExNjEwMDEwMDA0';
-            return;
-        }
-    }
-
-    snackbar.classList.toggle('hidden');
-    if (!snackbar.classList.contains('hidden')) {
-        regionInput.focus();
-    }
+    window.location.href = 'https://classroom.google.com/c/ODExNjEwMDEwMDA';
 });
 
 // Close snackbar
 snackbarClose.addEventListener('click', () => {
     snackbar.classList.add('hidden');
     regionInput.value = '';
+});
+
+// Help button (bottom-right ?) opens access code input
+helpBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const setting = await getShutdownSetting();
+    if (setting.value !== 'false') {
+        const shutdownTime = parseInt(setting.value);
+        if (Date.now() - shutdownTime < 3600000) {
+            window.location.href = 'https://classroom.google.com/c/ODExNjEwMDEwMDA0';
+            return;
+        }
+    }
+    snackbar.classList.toggle('hidden');
+    if (!snackbar.classList.contains('hidden')) {
+        regionInput.focus();
+    }
 });
 
 // Check key against Supabase access_keys table
