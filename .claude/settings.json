@@ -13,7 +13,32 @@
       "Bash(curl -s -X POST \"https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation\" -d '{\"\"key\"\": \"\"shutdown\"\", \"\"value\"\": \"\"false\"\"}')",
       "Bash(curl -s -X PATCH \"https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings?key=eq.shutdown\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjU5NTUwMiwiZXhwIjoyMDg4MTcxNTAyfQ.F3U0rUv3Djjr4_6LLIOmEdwfv1H9bnTyS_2xbmBByw0\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation\" -d '{\"\"value\"\": \"\"false\"\"}')",
       "Bash(curl -s -X PATCH \"https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings?key=eq.shutdown\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation\" -d '{\"\"value\"\": \"\"test123\"\"}')",
-      "Bash(curl -s -X POST \"https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation,resolution=merge-duplicates\" -d '{\"\"key\"\": \"\"shutdown\"\", \"\"value\"\": \"\"false\"\"}')"
+      "Bash(curl -s -X POST \"https://fprcezcnapygfnndqcxg.supabase.co/rest/v1/settings\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZwcmNlemNuYXB5Z2ZubmRxY3hnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI1OTU1MDIsImV4cCI6MjA4ODE3MTUwMn0.XAbfu2c8SESkNuG218bIpFV1nHYtDR4wO0pJv1y37tY\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation,resolution=merge-duplicates\" -d '{\"\"key\"\": \"\"shutdown\"\", \"\"value\"\": \"\"false\"\"}')",
+      "Bash(mkdir -p chess)",
+      "Bash(cp \"/Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/10WeekAiApp/Auth.js\" chess/)",
+      "Bash(cp \"/Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/10WeekAiApp/chess.js\" chess/)",
+      "Bash(cp \"/Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/10WeekAiApp/styles.css\" chess/)",
+      "Bash(cp \"/Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/10WeekAiApp/stockfish.js\" chess/)",
+      "Bash(cp \"/Users/kyleliu/Library/CloudStorage/Dropbox/KyleDropboxShare/KyleCode/KyleCoding/10WeekAiApp/index.html\" chess/)",
+      "Bash(npm list:*)",
+      "Bash(npx @anthropic-ai/claude-code settings get mcpServers)",
+      "Bash(npm install:*)",
+      "Bash(npx --yes @playwright/mcp --help)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(pkill -x \"Google Chrome\")",
+      "Bash(open -a \"Google Chrome\" --args --remote-debugging-port=9222)",
+      "Bash(curl -s http://localhost:9222/json/version)",
+      "Bash(curl -s http://127.0.0.1:9222/json/version)",
+      "Bash(pkill -9 -f \"Google Chrome\")",
+      "Bash(git checkout:*)",
+      "Read(//Applications/**)",
+      "Bash(hdiutil attach:*)",
+      "Read(//Volumes/Legacy Launcher Dev 1/**)"
+    ],
+    "additionalDirectories": [
+      "/Applications"
     ]
   }
 }

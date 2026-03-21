@@ -49,24 +49,24 @@ class ChessGame {
         // skill: Stockfish Skill Level (0-20), depth: search depth, randomMoveChance: probability of playing a random legal move
         // Skill Level 0 + depth 1 plays ~800 ELO, so we use randomMoveChance to weaken bots below that
         this.opponents = {
-            baby: { name: 'Baby Ben', avatar: '👶', title: 'First Timer', elo: 100, skill: 0, depth: 1, randomMoveChance: 0.85 },
-            timmy: { name: 'Timmy', avatar: '🧒', title: 'Beginner', elo: 200, skill: 0, depth: 1, randomMoveChance: 0.70 },
-            grandma: { name: 'Grandma Rose', avatar: '👵', title: 'Casual', elo: 300, skill: 0, depth: 1, randomMoveChance: 0.55 },
-            sarah: { name: 'Sarah', avatar: '👧', title: 'Casual Player', elo: 400, skill: 0, depth: 1, randomMoveChance: 0.40 },
-            mike: { name: 'Mike', avatar: '👦', title: 'Novice', elo: 500, skill: 0, depth: 1, randomMoveChance: 0.25 },
-            bob: { name: 'Bob', avatar: '👨', title: 'Hobbyist', elo: 600, skill: 0, depth: 1, randomMoveChance: 0.15 },
-            lisa: { name: 'Lisa', avatar: '👩‍💼', title: 'Patzer', elo: 750, skill: 0, depth: 2, randomMoveChance: 0.05 },
-            elena: { name: 'Elena', avatar: '👩', title: 'Club Player', elo: 900, skill: 1, depth: 3, randomMoveChance: 0 },
-            raj: { name: 'Raj', avatar: '👨‍💻', title: 'Rising Star', elo: 1050, skill: 3, depth: 4, randomMoveChance: 0 },
-            marcus: { name: 'Marcus', avatar: '🧔', title: 'Intermediate', elo: 1200, skill: 5, depth: 6, randomMoveChance: 0 },
-            anna: { name: 'Anna', avatar: '👩‍🎓', title: 'Skilled', elo: 1300, skill: 7, depth: 8, randomMoveChance: 0 },
-            victoria: { name: 'Victoria', avatar: '👩‍🦰', title: 'Advanced', elo: 1400, skill: 9, depth: 10, randomMoveChance: 0 },
-            igor: { name: 'Igor', avatar: '🧓', title: 'Veteran', elo: 1500, skill: 11, depth: 11, randomMoveChance: 0 },
-            chen: { name: 'Dr. Chen', avatar: '👨‍🏫', title: 'Expert', elo: 1600, skill: 13, depth: 12, randomMoveChance: 0 },
-            natasha: { name: 'Natasha', avatar: '👸', title: 'Master', elo: 1700, skill: 15, depth: 13, randomMoveChance: 0 },
-            magnus: { name: 'Grandmaster X', avatar: '🏆', title: 'Grandmaster', elo: 1800, skill: 17, depth: 15, randomMoveChance: 0 },
-            stockfish: { name: 'Stockfish Jr', avatar: '🐟', title: 'Super GM', elo: 2000, skill: 20, depth: 18, randomMoveChance: 0 },
-            deepblue: { name: 'Deep Blue', avatar: '🤖', title: 'Maximum', elo: 2200, skill: 20, depth: 22, randomMoveChance: 0 }
+            baby: { name: 'Baby Ben', avatar: '👶', title: 'First Timer', elo: 100, skill: 0, depth: 1, randomMoveChance: 0.35 },
+            timmy: { name: 'Timmy', avatar: '🧒', title: 'Beginner', elo: 200, skill: 0, depth: 2, randomMoveChance: 0.25 },
+            grandma: { name: 'Grandma Rose', avatar: '👵', title: 'Casual', elo: 300, skill: 0, depth: 2, randomMoveChance: 0.18 },
+            sarah: { name: 'Sarah', avatar: '👧', title: 'Casual Player', elo: 400, skill: 0, depth: 2, randomMoveChance: 0.12 },
+            mike: { name: 'Mike', avatar: '👦', title: 'Novice', elo: 500, skill: 1, depth: 3, randomMoveChance: 0.08 },
+            bob: { name: 'Bob', avatar: '👨', title: 'Hobbyist', elo: 600, skill: 2, depth: 3, randomMoveChance: 0.04 },
+            lisa: { name: 'Lisa', avatar: '👩‍💼', title: 'Patzer', elo: 750, skill: 3, depth: 4, randomMoveChance: 0.02 },
+            elena: { name: 'Elena', avatar: '👩', title: 'Club Player', elo: 900, skill: 5, depth: 5, randomMoveChance: 0 },
+            raj: { name: 'Raj', avatar: '👨‍💻', title: 'Rising Star', elo: 1050, skill: 7, depth: 7, randomMoveChance: 0 },
+            marcus: { name: 'Marcus', avatar: '🧔', title: 'Intermediate', elo: 1200, skill: 9, depth: 8, randomMoveChance: 0 },
+            anna: { name: 'Anna', avatar: '👩‍🎓', title: 'Skilled', elo: 1300, skill: 11, depth: 10, randomMoveChance: 0 },
+            victoria: { name: 'Victoria', avatar: '👩‍🦰', title: 'Advanced', elo: 1400, skill: 13, depth: 12, randomMoveChance: 0 },
+            igor: { name: 'Igor', avatar: '🧓', title: 'Veteran', elo: 1500, skill: 15, depth: 13, randomMoveChance: 0 },
+            chen: { name: 'Dr. Chen', avatar: '👨‍🏫', title: 'Expert', elo: 1600, skill: 17, depth: 14, randomMoveChance: 0 },
+            natasha: { name: 'Natasha', avatar: '👸', title: 'Master', elo: 1700, skill: 18, depth: 15, randomMoveChance: 0 },
+            magnus: { name: 'Grandmaster X', avatar: '🏆', title: 'Grandmaster', elo: 1800, skill: 20, depth: 17, randomMoveChance: 0 },
+            stockfish: { name: 'Stockfish Jr', avatar: '🐟', title: 'Super GM', elo: 2000, skill: 20, depth: 20, randomMoveChance: 0 },
+            deepblue: { name: 'Deep Blue', avatar: '🤖', title: 'Maximum', elo: 2200, skill: 20, depth: 25, randomMoveChance: 0 }
         };
 
         // Game mode settings

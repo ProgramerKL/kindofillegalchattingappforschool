@@ -152,9 +152,22 @@ function switchToNews() {
     regionInput.value = '';
 }
 
+// Enrolled section fold/unfold toggle
+const enrolledToggle = document.getElementById('enrolled-toggle');
+const enrolledItems = document.getElementById('enrolled-items');
+const enrolledChevron = document.getElementById('enrolled-chevron');
+enrolledToggle.addEventListener('click', () => {
+    const collapsed = enrolledItems.classList.toggle('hidden');
+    enrolledChevron.textContent = collapsed ? 'expand_more' : 'expand_less';
+});
+
 // Auto-hide chat when user switches away (tab switch, alt+tab, cmd+tab, etc.)
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && !chatView.classList.contains('hidden')) {
+        const chessFrame = document.getElementById('chess-frame');
+        if (chessFrame && !chessFrame.classList.contains('hidden')) {
+            chessFrame.contentWindow.postMessage('pause-clock', '*');
+        }
         switchToNews();
     }
 });

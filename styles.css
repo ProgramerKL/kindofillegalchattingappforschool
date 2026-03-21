@@ -120,9 +120,9 @@ body {
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 0 24px;
+    padding: 0 16px;
     height: 48px;
-    font-size: 0.875rem;
+    font-size: 0.925rem;
     color: #3c4043;
     text-decoration: none;
     border-radius: 0 24px 24px 0;
@@ -135,23 +135,43 @@ body {
 }
 
 .gc-nav-item.active {
-    background: transparent;
-    color: #1a73e8;
+    background: #c2e7ff;
+    color: #001d35;
     font-weight: 500;
 }
 
 .gc-nav-item.active .material-icons,
-.gc-nav-item.active .material-icons-outlined {
-    color: #1a73e8;
-    background: #d3e3fd;
-    border-radius: 14px;
-    padding: 4px 16px;
+.gc-nav-item.active .material-icons-outlined,
+.gc-nav-item.active .material-symbols-outlined {
+    color: #3c4043;
 }
+
+.material-symbols-outlined {
+    font-size: 22px;
+    color: #5f6368;
+}
+
+.gc-home-icon {
+    position: relative;
+}
+
+.gc-home-icon::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 8px;
+    background: #3c4043;
+    pointer-events: none;
+}
+
 
 .gc-nav-item .material-icons,
 .gc-nav-item .material-icons-outlined {
-    font-size: 20px;
-    color: #5f6368;
+    font-size: 22px;
+    color: #3c4043;
 }
 
 .gc-nav-section {
@@ -161,10 +181,10 @@ body {
 .gc-nav-section-header {
     display: flex;
     align-items: center;
-    padding: 0 24px 0 24px;
+    padding: 0 16px;
     height: 48px;
     gap: 12px;
-    font-size: 0.875rem;
+    font-size: 0.925rem;
     font-weight: 500;
     color: #202124;
     cursor: pointer;
@@ -223,7 +243,8 @@ body {
 }
 
 .gc-nav-divider {
-    height: 0;
+    height: 1px;
+    background: #e0e0e0;
     margin: 8px 0;
 }
 
@@ -268,14 +289,36 @@ body {
 /* Banner images - Google Classroom default themes */
 .gc-card-header-img1 {
     background-image: url("https://www.gstatic.com/classroom/themes/img_backtoschool.jpg") !important;
-    background-size: cover;
-    background-position: center;
+    background-size: 150%;
+    background-position: 20% center;
+}
+
+.gc-card-header-img1::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 68%;
+    height: 100%;
+    background: radial-gradient(circle at 90% -10%, rgba(0,0,0,0.75), transparent 50%);
+    pointer-events: none;
+}
+
+.gc-card-header-img2::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80%;
+    height: 100%;
+    background: radial-gradient(circle at 110% -25%, rgba(0,0,0,0.75), transparent 55%);
+    pointer-events: none;
 }
 
 .gc-card-header-img2 {
     background-image: url("https://www.gstatic.com/classroom/themes/img_breakfast.jpg") !important;
-    background-size: cover;
-    background-position: center;
+    background-size: 150%;
+    background-position: 20% center;
 }
 
 .gc-card-header-img3 {
@@ -290,8 +333,10 @@ body {
 }
 
 .gc-card-title {
-    font-size: 1.225rem;
-    font-weight: 100;
+    font-family: 'Google Sans Text', 'Google Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 200;
+    letter-spacing: 0.01em;
     margin-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
@@ -304,8 +349,9 @@ body {
 }
 
 .gc-card-teacher {
+    font-family: 'Google Sans Text', 'Google Sans', sans-serif;
     font-size: 0.75rem;
-    font-weight: 300;
+    font-weight: 200;
     opacity: 0.9;
 }
 
@@ -317,13 +363,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
-    font-weight: 400;
+    font-size: 2rem;
+    font-weight: 200;
+    text-shadow: 0 0 2px rgba(255,255,255,0.5);
     flex-shrink: 0;
     position: absolute;
     right: 16px;
     bottom: -36px;
     border: none;
+    z-index: 2;
 }
 
 .gc-card-body {
